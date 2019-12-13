@@ -6,8 +6,9 @@ su postgres -c "/usr/bin/pg_dumpall -f \"$OUTPUT.tmp\"" 2>&1 | /usr/bin/logger -
 
 size=$(stat -c%s "$OUTPUT.tmp")
 if [ $size -lt {{ postgresql_backup_minimum_expected_size }} ]; then
-    echo "ERROR: Database backup '$OUTPUT.tmp' is less than {{ postgresql_backup_minimum_expected_size }} bytes"
+    echo "ERROR: Database backup '$OUTPUT.tmp' is less than {{ postgresql_backup_minimum_expected_size }} bytes" 2>&1 | /usr/bin/logger -t backup
     exit 2
 fi
 
 mv "$OUTPUT.tmp" "$OUTPUT"
+echo "SUCCESS: Database backup '$OUTPUT' completed" 2>&1 | /usr/bin/logger -t backup
