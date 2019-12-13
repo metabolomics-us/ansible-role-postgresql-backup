@@ -2,7 +2,7 @@
 # Dump all PostgreSQL databases
 
 OUTPUT="{{ postgresql_backup_dir | quote }}/$(date +{{ postgresql_backup_filename_format | quote }})"
-su postgres -c "/usr/bin/pg_dumpall -f \"$OUTPUT.tmp\""
+su postgres -c "/usr/bin/pg_dumpall -f \"$OUTPUT.tmp\"" 2>&1 | /usr/bin/logger -t backup
 
 size=$(stat -c%s "$OUTPUT.tmp")
 if [ $size -lt {{ postgresql_backup_minimum_expected_size }} ]; then
