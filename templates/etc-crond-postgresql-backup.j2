@@ -10,7 +10,7 @@ if [ $size -lt {{ postgresql_backup_minimum_expected_size }} ]; then
     exit 2
 fi
 
-echo "Compressing database backup"
+echo "Compressing database backup '$OUTPUT.tmp' to '$OUTPUT.tmp.gz'" 2>&1 | /usr/bin/logger -t backup
 gzip "$OUTPUT.tmp"
 mv "$OUTPUT.tmp.gz" "$OUTPUT.gz"
 echo "SUCCESS: Database backup '$OUTPUT.gz' completed" 2>&1 | /usr/bin/logger -t backup
